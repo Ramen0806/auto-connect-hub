@@ -1,58 +1,69 @@
-import { Button } from "@/components/ui/button";
-import { Menu } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { Menu } from "lucide-react";
+import { AuthButtons } from "./AuthButtons";
+import { useMobile } from "@/hooks/use-mobile";
 
 export const Navbar = () => {
+  const isMobile = useMobile();
   const [isOpen, setIsOpen] = useState(false);
 
-  return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          <Link to="/" className="text-xl font-bold text-primary">
-            AutomatePro
-          </Link>
-          
-          <div className="hidden md:flex items-center space-x-8">
-            <Link to="/features" className="text-foreground/80 hover:text-primary transition-colors">
-              Features
-            </Link>
-            <Link to="/pricing" className="text-foreground/80 hover:text-primary transition-colors">
-              Pricing
-            </Link>
-            <Link to="/contact" className="text-foreground/80 hover:text-primary transition-colors">
-              Contact
-            </Link>
-            <Link to="/get-started">
-              <Button>Get Started</Button>
-            </Link>
-          </div>
+  const links = [
+    { href: "/features", label: "Features" },
+    { href: "/pricing", label: "Pricing" },
+    { href: "/contact", label: "Contact" },
+  ];
 
-          <button className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
-            <Menu className="w-6 h-6" />
-          </button>
+  const NavLinks = () => (
+    <>
+      {links.map((link) => (
+        <Link
+          key={link.href}
+          to={link.href}
+          className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+        >
+          {link.label}
+        </Link>
+      ))}
+    </>
+  );
+
+  return (
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-14 items-center">
+        <div className="mr-4 flex">
+          <Link to="/" className="mr-6 flex items-center space-x-2">
+            <span className="font-bold">AutomatePro</span>
+          </Link>
         </div>
 
-        {isOpen && (
-          <div className="md:hidden py-4 animate-fade-in">
-            <div className="flex flex-col space-y-4">
-              <Link to="/features" className="text-foreground/80 hover:text-primary transition-colors">
-                Features
-              </Link>
-              <Link to="/pricing" className="text-foreground/80 hover:text-primary transition-colors">
-                Pricing
-              </Link>
-              <Link to="/contact" className="text-foreground/80 hover:text-primary transition-colors">
-                Contact
-              </Link>
-              <Link to="/get-started">
-                <Button className="w-full">Get Started</Button>
-              </Link>
+        {isMobile ? (
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="ml-auto">
+                <Menu className="h-5 w-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[80vw]">
+              <nav className="flex flex-col gap-4">
+                <NavLinks />
+                <AuthButtons />
+              </nav>
+            </SheetContent>
+          </Sheet>
+        ) : (
+          <>
+            <nav className="flex items-center gap-6 text-sm">
+              <NavLinks />
+            </nav>
+            <div className="ml-auto">
+              <AuthButtons />
             </div>
-          </div>
+          </>
         )}
       </div>
-    </nav>
+    </header>
   );
 };

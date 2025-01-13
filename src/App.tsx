@@ -8,6 +8,7 @@ import Features from "./pages/Features";
 import Pricing from "./pages/Pricing";
 import Contact from "./pages/Contact";
 import GetStarted from "./pages/GetStarted";
+import Dashboard from "./pages/Dashboard";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ const App = () => (
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/get-started" element={<GetStarted />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>

@@ -5,12 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AuthError } from "@supabase/supabase-js";
 
 const ManagerSignIn = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -31,8 +34,20 @@ const ManagerSignIn = () => {
     checkAuth();
   }, [navigate]);
 
+  const getErrorMessage = (error: AuthError) => {
+    switch (error.message) {
+      case "Invalid login credentials":
+        return "Invalid email or password. Please check your credentials and try again.";
+      case "Email not confirmed":
+        return "Please verify your email address before signing in.";
+      default:
+        return error.message;
+    }
+  };
+
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
     setIsLoading(true);
 
     try {
@@ -67,9 +82,10 @@ const ManagerSignIn = () => {
         navigate('/manager-dashboard');
       }
     } catch (error: any) {
+      setError(getErrorMessage(error));
       toast({
         title: "Error",
-        description: error.message,
+        description: getErrorMessage(error),
         variant: "destructive",
       });
     } finally {
@@ -84,6 +100,11 @@ const ManagerSignIn = () => {
           <CardTitle className="text-2xl font-bold text-center">Manager Sign In</CardTitle>
         </CardHeader>
         <CardContent>
+          {error && (
+            <Alert variant="destructive" className="mb-4">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
           <form onSubmit={handleSignIn} className="space-y-4">
             <div className="space-y-2">
               <label htmlFor="email" className="text-sm font-medium">Email</label>
@@ -93,6 +114,8 @@ const ManagerSignIn = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                className="w-full"
+                placeholder="Enter your email"
               />
             </div>
             <div className="space-y-2">
@@ -103,6 +126,8 @@ const ManagerSignIn = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                className="w-full"
+                placeholder="Enter your password"
               />
             </div>
             <Button

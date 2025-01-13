@@ -4,7 +4,7 @@ import { Check } from "lucide-react";
 const plans = [
   {
     name: "Basic",
-    price: "$299",
+    price: "$599",
     description: "Perfect for small businesses just getting started with automation",
     features: [
       "3 Simple Automations",
@@ -15,7 +15,7 @@ const plans = [
   },
   {
     name: "Pro",
-    price: "$599",
+    price: "$799",
     description: "Ideal for growing businesses needing more advanced automation",
     features: [
       "10 Advanced Automations",

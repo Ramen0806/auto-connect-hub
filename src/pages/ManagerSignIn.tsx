@@ -19,11 +19,14 @@ const ManagerSignIn = () => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        const { data: managerData } = await supabase
+        console.log("Session found:", session);
+        const { data: managerData, error: managerError } = await supabase
           .from('managers')
           .select('*')
           .eq('id', session.user.id)
           .single();
+
+        console.log("Manager data:", managerData, "Error:", managerError);
 
         if (managerData) {
           navigate('/manager-dashboard');
@@ -35,6 +38,7 @@ const ManagerSignIn = () => {
   }, [navigate]);
 
   const getErrorMessage = (error: AuthError) => {
+    console.log("Auth error details:", error);
     switch (error.message) {
       case "Invalid login credentials":
         return "Invalid email or password. Please check your credentials and try again.";
@@ -51,6 +55,7 @@ const ManagerSignIn = () => {
     setIsLoading(true);
 
     try {
+      console.log("Attempting sign in with email:", email);
       const { data: { session }, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -58,12 +63,16 @@ const ManagerSignIn = () => {
 
       if (signInError) throw signInError;
 
+      console.log("Sign in successful, session:", session);
+
       if (session) {
         const { data: managerData, error: managerError } = await supabase
           .from('managers')
           .select('*')
           .eq('id', session.user.id)
           .single();
+
+        console.log("Manager check result:", { managerData, managerError });
 
         if (managerError || !managerData) {
           await supabase.auth.signOut();
@@ -82,6 +91,7 @@ const ManagerSignIn = () => {
         navigate('/manager-dashboard');
       }
     } catch (error: any) {
+      console.error("Sign in error:", error);
       setError(getErrorMessage(error));
       toast({
         title: "Error",

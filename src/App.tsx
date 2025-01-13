@@ -9,6 +9,8 @@ import Pricing from "./pages/Pricing";
 import Contact from "./pages/Contact";
 import GetStarted from "./pages/GetStarted";
 import Dashboard from "./pages/Dashboard";
+import ManagerSignIn from "./pages/ManagerSignIn";
+import ManagerDashboard from "./pages/ManagerDashboard";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +27,8 @@ const App = () => (
           <Route path="/contact" element={<Contact />} />
           <Route path="/get-started" element={<GetStarted />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/manager-signin" element={<ManagerSignIn />} />
+          <Route path="/manager-dashboard" element={<ManagerDashboard />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>

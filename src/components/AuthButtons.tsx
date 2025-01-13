@@ -46,6 +46,12 @@ export const AuthButtons = () => {
       <Button onClick={() => navigate("/get-started")}>
         Get Started
       </Button>
+      <Button
+        variant="ghost"
+        onClick={() => navigate("/manager-signin")}
+      >
+        Manager Sign In
+      </Button>
     </div>
   );
 };
